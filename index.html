@@ -17,6 +17,25 @@
                 resize: none;
             }
         </style>
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+            function check_ssh_key() {
+                var key = $('#form-ssh-key').val();
+                var is_key = key.match(/ssh-rsa/);
+                if (is_key) {
+                    $('#key-group').removeClass('has-error');
+                    $('#key-text-error').hide();
+                } else {
+                    $('#key-group').addClass('has-error');
+                    $('#key-text-error').show();
+                }
+            }
+            $(document).ready(function() {
+                $('#form-ssh-key').change(function() {
+                    check_ssh_key();
+                });
+            });
+        </script>
         <title>Cryptosense SSH key strength analyzer</title>
     </head>
     <body>
@@ -64,21 +83,23 @@
                 </p>
 
                 <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="formSshKey" class="col-md-3 control-label">Public SSH key</label>
+                    <div id="key-group" class="form-group">
+                        <label for="form-ssh-key" class="col-md-3 control-label">Public SSH key</label>
                         <div class="col-md-9">
-                            <textarea class="form-control" id="formSshkey">
-                            </textarea>
+                            <textarea class="form-control" id="form-ssh-key"></textarea>
                             <p class="help-block">
                                 Your SSH key can be found in <code>.ssh/id_rsa.pub</code>.
                                 Don't paste your private key!
                             </p>
+                            <p id="key-text-error" class="bg-danger" style="display: none">
+                                This does not look like a public SSH key.
+                            </p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="formEmail" class="col-md-3 control-label">E-mail address</label>
+                        <label for="form-email" class="col-md-3 control-label">E-mail address</label>
                         <div class="col-md-9">
-                            <input type="text" placeholder="me@domain.com" id="formEmail"></input>
+                            <input type="text" placeholder="me@domain.com" id="form-email"></input>
                             <p class="help-block">
                                 We'll keep you updated in case
                                 something's wrong with your key.
