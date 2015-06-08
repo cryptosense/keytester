@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="icon" type="image/png" href="http://cryptosense.com/wp-content/uploads/2014/05/square12.png">
+        <style>
+            .navbar-brand,
+            .navbar-nav li a {
+                line-height: 80px;
+                height: 80px;
+                padding-top: 0;
+            }
+            .navbar img {
+                padding-top: 23px;
+            }
+            textarea {
+                resize: none;
+            }
+        </style>
+        <title>Cryptosense SSH key strength analyzer</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img src="http://cryptosense.com/wp-content/uploads/2013/10/CSlogo-White-web-230px.png"
+                             alt="Cryptosense"
+                        >
+                    </a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">About Cryptosense</a></li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="col-md-6 col-md-offset-3">
+                <h2>Test the security of your SSH keys</h2>
+
+                <p>
+                Lorem ipsum dolor sit amet, et mei causae accusamus, scripta
+                disputando in duo, debitis honestatis mel ne. Ne liber voluptua
+                has, eos at nisl erant decore. Nam scriptorem mediocritatem in,
+                id graeco facete labores mel. Ut usu odio platonem. Justo
+                insolens at qui, id nonumy cetero usu. Eu erroribus splendide
+                vix, cu nemore cetero eleifend vim.
+                </p>
+
+                <p>
+                Ad ullum tantas dictas sed, ne per scaevola perpetua. Pro sale
+                fugit albucius no. Munere reformidans eu ius, duis albucius
+                adversarium vis in. In quo elit repudiandae, posse virtute
+                adolescens an vis.
+                </p>
+
+                <p>
+                 Nam eu vocibus praesent, usu nemore volumus tincidunt in, eu
+                 rebum quaeque legendos sed. Ad quo dolores iracundia. Nam ne
+                 noluisse urbanitas dissentias. An nec eius aperiam, ei nec
+                 ullamcorper conclusionemque. Vel ea atqui minim legendos,
+                 iriure numquam albucius cum ea, qui ad eius meis utroque.
+                </p>
+
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="formSshKey" class="col-md-3 control-label">Public SSH key</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" id="formSshkey">
+                            </textarea>
+                            <p class="help-block">
+                                Your SSH key can be found in <code>.ssh/id_rsa.pub</code>.
+                                Don't paste your private key!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="formEmail" class="col-md-3 control-label">E-mail address</label>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="me@domain.com" id="formEmail"></input>
+                            <p class="help-block">
+                                We'll keep you updated in case
+                                something's wrong with your key.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
