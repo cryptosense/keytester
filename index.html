@@ -43,28 +43,34 @@
             <div class="col-md-6 col-md-offset-3">
                 <h2>Test the security of your SSH keys</h2>
 
-                <p>
-                Lorem ipsum dolor sit amet, et mei causae accusamus, scripta
-                disputando in duo, debitis honestatis mel ne. Ne liber voluptua
-                has, eos at nisl erant decore. Nam scriptorem mediocritatem in,
-                id graeco facete labores mel. Ut usu odio platonem. Justo
-                insolens at qui, id nonumy cetero usu. Eu erroribus splendide
-                vix, cu nemore cetero eleifend vim.
-                </p>
+                <h3>How it Works</h3>
 
                 <p>
-                Ad ullum tantas dictas sed, ne per scaevola perpetua. Pro sale
-                fugit albucius no. Munere reformidans eu ius, duis albucius
-                adversarium vis in. In quo elit repudiandae, posse virtute
-                adolescens an vis.
+                We will take the public key you paste here and, if it parses
+                correctly, run it against two RSA key healthcheck algorithms:
+                division by small primes, and batch-GCD against the
+                (large)cryptosense key database. We will also check if it
+                matches a known compromised key from the
+                <a href="https://www.debian.org/security/2008/dsa-1571"> Debian 2008 randomness bug</a>.
+                You will receive the results by email.
                 </p>
 
+                <h3>Security and Privacy Notes</h3>
+
                 <p>
-                 Nam eu vocibus praesent, usu nemore volumus tincidunt in, eu
-                 rebum quaeque legendos sed. Ad quo dolores iracundia. Nam ne
-                 noluisse urbanitas dissentias. An nec eius aperiam, ei nec
-                 ullamcorper conclusionemque. Vel ea atqui minim legendos,
-                 iriure numquam albucius cum ea, qui ad eius meis utroque.
+                Note that by submitting your key you agree to us keeping it in
+                our database. Unless you tick the opt-out checkbox, we will also
+                keep your email address and email you if we factor your key at a
+                later date. This might happen if, for example, another key is
+                submitted that shares a factor with yours. We may also send you
+                information about other cryptosense products, for example as we
+                add other factorization algorithms to the site. You can always
+                opt-out later, and we will not communicate your address (or your
+                key) to any other organization. For background information on RSA
+                key factoring see our recent blog post on
+                <a
+                    href="http://cryptosense.com/batch-gcding-github-ssh-keys/">Batch
+                    GCD-ing GitHub SSH Keys</a>.
                 </p>
 
                 <form id="ssh-form" class="form-horizontal" accept-charset="UTF-8" action="https://formkeep.com/f/55d47b4e9575" method="POST">
@@ -98,35 +104,34 @@
                         </div>
                     </div>
                 </form>
-            </div>
-            <div class="col-md-offset-3 col-md-9">
-            <dl class="dl-horizontal">
+                <dl class="dl-horizontal">
 
-                <div id="trial-result-row">
-                    <dt>
-                        <span id="trial-result-icon"></span>
-                        Small factors
-                    </dt>
+                    <div id="trial-result-row">
+                        <dt>
+                            <span id="trial-result-icon"></span>
+                            Small factors
+                        </dt>
 
-                    <dd id="trial-result-text">
-                        RSA public keys are supposed to be the product of two
-                        large prime numbers. If a public key has a small
-                        divisor, it means that it was generated with a flawed
-                        algorithm.
-                    </dd>
-                </div>
-                <div id="batch-result-row">
-                    <dt>
-                        <span id="batch-result-icon"></span>
-                        Common factors
-                    </dt>
-                    <dd id="batch-result-text">
-                        Factoring a single key is difficult, but with a
-                        large amount of keys at hand, it is possible to find
-                        common factor between keys in a tractable manner. If
-                        such a factor exists, both keys can be factored.
-                    </dd>
-                </div>
+                        <dd id="trial-result-text">
+                            RSA public keys are supposed to be the product of two
+                            large prime numbers. If a public key has a small
+                            divisor, it means that it was generated with a flawed
+                            algorithm.
+                        </dd>
+                    </div>
+                    <div id="batch-result-row">
+                        <dt>
+                            <span id="batch-result-icon"></span>
+                            Common factors
+                        </dt>
+                        <dd id="batch-result-text">
+                            Factoring a single key is difficult, but with a
+                            large amount of keys at hand, it is possible to find
+                            common factor between keys in a tractable manner. If
+                            such a factor exists, both keys can be factored.
+                        </dd>
+                    </div>
+                </dl>
             </div>
         </div>
     </body>
