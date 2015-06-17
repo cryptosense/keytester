@@ -1,5 +1,3 @@
-var bigInt = require("big-integer");
-
 function decodeBase64(s) {
     var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
     var A="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -44,8 +42,7 @@ function parse(key) {
     var len2 = readLen(buf);
     var v2 = buf.substr(4, len2);
     buf = buf.substr(4 + len2);
-    var len3 = readLen(buf);
-    var v3 = buf.substr(4, len3);
+    var len3 = readLen(buf); var v3 = buf.substr(4, len3);
     buf = buf.substr(4 + len3);
     return { 'type': v1, 'e': parseBigInt(v2), 'n': parseBigInt(v3) }
 }
@@ -83,15 +80,4 @@ function isDivisibleByASmallPrime(n, maxPrime) {
         }
     }
     return false;
-}
-
-function trialDivision(key) {
-    var parsedKey = parse(key);
-    var n = parsedKey.n;
-    var result = isDivisibleByASmallPrime(n, 1000000);
-    if (result === false) {
-        return "This key seems good!"
-    } else {
-        return "This key is divisible by " + result
-    }
 }

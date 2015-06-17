@@ -18,24 +18,9 @@
             }
         </style>
         <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script>
-            function check_ssh_key() {
-                var key = $('#form-ssh-key').val();
-                var is_key = key.match(/ssh-rsa/);
-                if (is_key) {
-                    $('#key-group').removeClass('has-error');
-                    $('#key-text-error').hide();
-                } else {
-                    $('#key-group').addClass('has-error');
-                    $('#key-text-error').show();
-                }
-            }
-            $(document).ready(function() {
-                $('#form-ssh-key').change(function() {
-                    check_ssh_key();
-                });
-            });
-        </script>
+        <script src="http://peterolson.github.com/BigInteger.js/BigInteger.min.js"></script>
+        <script src="rsa.js"></script>
+        <script src="key-tester.js"></script>
         <title>Cryptosense SSH key strength analyzer</title>
     </head>
     <body>
@@ -82,7 +67,7 @@
                  iriure numquam albucius cum ea, qui ad eius meis utroque.
                 </p>
 
-                <form class="form-horizontal" accept-charset="UTF-8" action="https://formkeep.com/f/55d47b4e9575" method="POST">
+                <form id="ssh-form" class="form-horizontal" accept-charset="UTF-8" action="https://formkeep.com/f/55d47b4e9575" method="POST">
                     <input type="hidden" name="utf8" value="✓">
                     <div id="key-group" class="form-group">
                         <label for="form-ssh-key" class="col-md-3 control-label">Public SSH key</label>
@@ -113,6 +98,35 @@
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="col-md-offset-3 col-md-9">
+            <dl class="dl-horizontal">
+
+                <div id="trial-result-row">
+                    <dt>
+                        <span id="trial-result-icon"></span>
+                        Small factors
+                    </dt>
+
+                    <dd id="trial-result-text">
+                        RSA public keys are supposed to be the product of two
+                        large prime numbers. If a public key has a small
+                        divisor, it means that it was generated with a flawed
+                        algorithm.
+                    </dd>
+                </div>
+                <div id="batch-result-row">
+                    <dt>
+                        <span id="batch-result-icon"></span>
+                        Common factors
+                    </dt>
+                    <dd id="batch-result-text">
+                        Factoring a single key is difficult, but with a
+                        large amount of keys at hand, it is possible to find
+                        common factor between keys in a tractable manner. If
+                        such a factor exists, both keys can be factored.
+                    </dd>
+                </div>
             </div>
         </div>
     </body>
