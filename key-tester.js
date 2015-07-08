@@ -52,6 +52,17 @@ $(document).ready(function() {
         var key = $('#form-ssh-key').val();
         var result = trialDivision(key);
         updateTrialResult(result);
-        window.setTimeout(updateBatchResult, 1000);
+
+        $.ajax({
+            method: "POST",
+            url: $(this).attr("action"),
+            data: $(this).serialize(),
+            success: updateBatchResult,
+            error: function(e) { console.log(e) },
+            headers: {
+                'Accept': "application/javascript",
+                'Content-Type': "application/javascript"
+            }
+        });
     });
 });
