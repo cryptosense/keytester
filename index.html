@@ -72,7 +72,7 @@
                     <div id="key-group" class="form-group">
                         <label for="form-ssh-key" class="col-md-3 control-label">Public SSH key</label>
                         <div class="col-md-9">
-                            <textarea name="key" class="form-control" id="form-ssh-key"></textarea>
+                            <textarea required pattern=".*ssh-rsa.*" name="key" class="form-control" id="form-ssh-key"></textarea>
                             <p class="help-block">
                                 Your SSH key can be found in <code>.ssh/id_rsa.pub</code>.
                                 Don't paste your private key!
@@ -85,7 +85,7 @@
                     <div class="form-group">
                         <label for="form-email" class="col-md-3 control-label">E-mail address</label>
                         <div class="col-md-9">
-                            <input type="text" name="email" placeholder="me@domain.com" id="form-email"></input>
+                            <input required type="email" name="email" placeholder="me@domain.com" id="form-email"></input>
                             <p class="help-block">
                                 We'll keep you updated in case
                                 something's wrong with your key.
