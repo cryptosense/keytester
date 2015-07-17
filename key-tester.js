@@ -61,7 +61,6 @@ $(document).ready(function() {
             error: function(e) { console.log(e) },
             headers: {
                 'Accept': "application/javascript",
-                'Content-Type': "application/javascript"
             }
         });
     });
