@@ -34,6 +34,15 @@ function updateTrialResult(result) {
     $('#trial-result-icon').removeClass();
     $('#trial-result-icon').addClass(icon);
 }
+
+function afterSubmit($form) {
+    updateBatchResult();
+    ga('send', 'event', 'form', 'submit')
+    if ($form.find('[name=newsletter]').is(':checked')) {
+        ga('send', 'event', 'newsletter', 'subscribe')
+    }
+}
+
 function updateBatchResult() {
     var text = "Your key has been submitted to out next batch-GCD run and will inform you in case your key is sharing a factor with another one.";
     $('#batch-result-text').text(text);
@@ -51,13 +60,14 @@ $(document).ready(function() {
         e.preventDefault();
         var key = $('#form-ssh-key').val();
         var result = trialDivision(key);
+        var $form = $(this);
         updateTrialResult(result);
 
         $.ajax({
             method: "POST",
-            url: $(this).attr("action"),
-            data: $(this).serialize(),
-            success: updateBatchResult,
+            url: $form.attr("action"),
+            data: $form.serialize(),
+            success: function() { afterSubmit($form); },
             error: function(e) { console.log(e) },
             headers: {
                 'Accept': "application/javascript",
