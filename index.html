@@ -16,11 +16,15 @@
             textarea {
                 resize: none;
             }
+            .short-text {
+                display: none;
+            }
         </style>
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="https://peterolson.github.io/BigInteger.js/BigInteger.min.js"></script>
         <script src="rsa.js"></script>
         <script src="key-tester.js"></script>
+        <script src="//www.google-analytics.com/cx/api.js?experiment=ejeFmzGARmq_sdCDBmHWIA"></script>
         <title>Cryptosense SSH key strength analyzer</title>
     </head>
     <body>
@@ -39,6 +43,17 @@
             <div class="col-md-6 col-md-offset-3">
                 <h2>Test the security of your SSH keys</h2>
 
+                <div class="short-text">
+                <p>
+                We will take the public key you paste here and, if it parses
+                correctly, run it against two RSA key healthcheck algorithms:
+                division by small primes, and batch-GCD against the
+                (large) Cryptosense key database. More information can be found in
+                <a href="https://cryptosense.com/an-online-rsa-key-tester/">this blog post</a>.
+                </p>
+                </div>
+
+                <div class="extra-text">
                 <h3>How it Works</h3>
 
                 <p>
@@ -65,6 +80,7 @@
                 <a href="https://cryptosense.com/an-online-rsa-key-tester/">our
                 recent blog post on the incidence of factorable keys</a>.
                 </p>
+                </div>
 
                 <form id="ssh-form" class="form-horizontal" accept-charset="UTF-8" action="https://formkeep.com/f/55d47b4e9575" method="POST">
                     <input type="hidden" name="utf8" value="✓">
@@ -109,6 +125,7 @@
                     </div>
                 </form>
 
+                <div class="extra-text">
                 <h3>Results</h3>
 
                 <dl class="dl-horizontal">
@@ -229,6 +246,7 @@
                         href="https://cryptosense.com/contact/">here</a>.
 
                 </p>
+                </div>
 
             </div>
         </div>

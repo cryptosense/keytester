@@ -52,6 +52,27 @@ function updateBatchResult() {
     $('#batch-result-icon').addClass("glyphicon glyphicon-hourglass");
 
 }
+
+function noFAQ() {
+    $('.extra-text').hide();
+    $('.short-text').show();
+    $('#form-ssh-key').attr('rows', '10');
+}
+
+function pickVariation() {
+    return cxApi.chooseVariation();
+}
+
+function setupAB() {
+    var chosenVariation = pickVariation();
+    console.log(chosenVariation);
+    var variations = [
+        function () {},
+        noFAQ
+    ];
+    variations[chosenVariation]();
+}
+
 $(document).ready(function() {
     $('#form-ssh-key').change(function() {
         check_ssh_key();
@@ -74,4 +95,5 @@ $(document).ready(function() {
             }
         });
     });
+    setupAB();
 });
