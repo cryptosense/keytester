@@ -4,11 +4,11 @@
   "description": "Test the strength of RSA keys",
   "main": "key-tester.js",
   "dependencies": {
-    "bower": "^1.4.1",
-    "live-server": "^0.7.1",
     "big-integer": "^1.4.6"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jshint": "^2.9.1"
+  },
   "scripts": {
     "test": "jshint *.js"
   },
