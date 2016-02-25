@@ -75,7 +75,25 @@ function setupAB() {
     variations[chosenVariation]();
 }
 
-function run() {
+function sendDebug($form, success) {
+    alert($form.serialize());
+    success();
+}
+
+function sendForReal($form, success) {
+    $.ajax({
+        method: "POST",
+        url: $form.attr("action"),
+        data: $form.serialize(),
+        success: function() { success(); },
+        error: function(e) { console.log(e); },
+        headers: {
+            'Accept': "application/javascript",
+        }
+    });
+}
+
+function run(debug) {
     $(document).ready(function() {
         $('#form-ssh-key').change(function() {
             check_ssh_key();
@@ -87,15 +105,10 @@ function run() {
             var $form = $(this);
             updateTrialResult(result);
 
-            $.ajax({
-                method: "POST",
-                url: $form.attr("action"),
-                data: $form.serialize(),
-                success: function() { afterSubmit($form); },
-                error: function(e) { console.log(e); },
-                headers: {
-                    'Accept': "application/javascript",
-                }
+            var send = debug ? sendDebug : sendForReal;
+
+            send($form, function() {
+                afterSubmit($form);
             });
         });
         setupAB();

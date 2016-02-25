@@ -12,7 +12,8 @@
   },
   "scripts": {
     "test": "jshint *.js",
-    "build": "browserify browser.js -o static/bundle.js"
+    "build": "browserify browser.js -o static/bundle.js",
+    "dev": "browserify browser-dev.js -o static/bundle.js"
   },
   "repository": {
     "type": "git",
