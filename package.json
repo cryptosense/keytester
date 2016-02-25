@@ -1,0 +1,24 @@
+{
+  "name": "key-tester",
+  "version": "0.1.0",
+  "description": "Test the strength of RSA keys",
+  "main": "key-tester.js",
+  "dependencies": {
+    "bower": "^1.4.1",
+    "live-server": "^0.7.1",
+    "big-integer": "^1.4.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jshint *.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cryptosense/keytester.git"
+  },
+  "author": "Etienne Millon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cryptosense/keytester/issues"
+  }
+}
