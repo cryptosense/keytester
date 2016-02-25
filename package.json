@@ -9,10 +9,11 @@
     "jquery": "^2.2.1"
   },
   "devDependencies": {
-    "jshint": "^2.9.1"
+    "jshint": "^2.9.1",
+    "jasmine": "^2.4.1"
   },
   "scripts": {
-    "test": "jshint *.js",
+    "test": "jshint *.js && jasmine",
     "build": "browserify browser.js -o static/bundle.js",
     "dev": "browserify browser-dev.js -o static/bundle.js"
   },
