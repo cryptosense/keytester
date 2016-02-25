@@ -1,3 +1,5 @@
+var rsa = require('./rsa.js');
+
 function check_ssh_key() {
     var key = $('#form-ssh-key').val();
     var is_key = key.match(/ssh-rsa/);
@@ -10,9 +12,9 @@ function check_ssh_key() {
     }
 }
 function trialDivision(key) {
-    var parsedKey = parse(key);
+    var parsedKey = rsa.parse(key);
     var n = parsedKey.n;
-    var result = isDivisibleByASmallPrime(n, 1000000);
+    var result = rsa.isDivisibleByASmallPrime(n, 1000000);
     return result;
 }
 function updateTrialResult(result) {
@@ -73,27 +75,33 @@ function setupAB() {
     variations[chosenVariation]();
 }
 
-$(document).ready(function() {
-    $('#form-ssh-key').change(function() {
-        check_ssh_key();
-    });
-    $('#ssh-form').submit(function(e) {
-        e.preventDefault();
-        var key = $('#form-ssh-key').val();
-        var result = trialDivision(key);
-        var $form = $(this);
-        updateTrialResult(result);
-
-        $.ajax({
-            method: "POST",
-            url: $form.attr("action"),
-            data: $form.serialize(),
-            success: function() { afterSubmit($form); },
-            error: function(e) { console.log(e); },
-            headers: {
-                'Accept': "application/javascript",
-            }
+function run() {
+    $(document).ready(function() {
+        $('#form-ssh-key').change(function() {
+            check_ssh_key();
         });
+        $('#ssh-form').submit(function(e) {
+            e.preventDefault();
+            var key = $('#form-ssh-key').val();
+            var result = trialDivision(key);
+            var $form = $(this);
+            updateTrialResult(result);
+
+            $.ajax({
+                method: "POST",
+                url: $form.attr("action"),
+                data: $form.serialize(),
+                success: function() { afterSubmit($form); },
+                error: function(e) { console.log(e); },
+                headers: {
+                    'Accept': "application/javascript",
+                }
+            });
+        });
+        setupAB();
     });
-    setupAB();
-});
+}
+
+module.exports = {
+    run: run
+};

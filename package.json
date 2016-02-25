@@ -4,13 +4,15 @@
   "description": "Test the strength of RSA keys",
   "main": "key-tester.js",
   "dependencies": {
-    "big-integer": "^1.4.6"
+    "big-integer": "^1.4.6",
+    "browserify": "^13.0.0"
   },
   "devDependencies": {
     "jshint": "^2.9.1"
   },
   "scripts": {
-    "test": "jshint *.js"
+    "test": "jshint *.js",
+    "build": "browserify browser.js -o static/bundle.js"
   },
   "repository": {
     "type": "git",

@@ -86,3 +86,8 @@ function isDivisibleByASmallPrime(n, maxPrime) {
     }
     return false;
 }
+
+module.exports = {
+    parse: parse,
+    isDivisibleByASmallPrime: isDivisibleByASmallPrime
+};
