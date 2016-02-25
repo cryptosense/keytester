@@ -1,3 +1,5 @@
+var bigInt = require('big-integer');
+
 function decodeBase64(s) {
     var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
     var A="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
