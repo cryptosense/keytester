@@ -1,4 +1,5 @@
 var rsa = require('./rsa.js');
+var $ = require('jquery');
 
 function check_ssh_key() {
     var key = $('#form-ssh-key').val();
