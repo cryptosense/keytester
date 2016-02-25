@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/cryptosense/keytester.git"
   },
-  "author": "Etienne Millon",
+  "author": "Etienne Millon <etienne@cryptosense.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/cryptosense/keytester/issues"
