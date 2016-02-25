@@ -37,9 +37,9 @@ function updateTrialResult(result) {
 
 function afterSubmit($form) {
     updateBatchResult();
-    ga('send', 'event', 'form', 'submit')
+    ga('send', 'event', 'form', 'submit');
     if ($form.find('[name=newsletter]').is(':checked')) {
-        ga('send', 'event', 'newsletter', 'subscribe')
+        ga('send', 'event', 'newsletter', 'subscribe');
     }
 }
 
@@ -89,7 +89,7 @@ $(document).ready(function() {
             url: $form.attr("action"),
             data: $form.serialize(),
             success: function() { afterSubmit($form); },
-            error: function(e) { console.log(e) },
+            error: function(e) { console.log(e); },
             headers: {
                 'Accept': "application/javascript",
             }
