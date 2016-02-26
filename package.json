@@ -9,7 +9,6 @@
     "jquery": "^2.2.1"
   },
   "devDependencies": {
-    "gh-pages": "^0.10.0",
     "jasmine": "^2.4.1",
     "jshint": "^2.9.1"
   },
