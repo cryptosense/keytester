@@ -60,7 +60,7 @@ function updateBatchResult() {
 }
 
 function sendDebug($form, success) {
-    alert($form.serialize());
+    console.log($form.serialize());
     success();
 }
 
