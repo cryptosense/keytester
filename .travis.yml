@@ -3,3 +3,9 @@ node_js: 4.1
 script:
     - npm test
     - npm run build
+deploy:
+    provider: script
+    script: node deploy.js
+    skip_cleanup: true
+    on:
+        branch: master

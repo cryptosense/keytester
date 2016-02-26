@@ -9,8 +9,9 @@
     "jquery": "^2.2.1"
   },
   "devDependencies": {
-    "jshint": "^2.9.1",
-    "jasmine": "^2.4.1"
+    "gh-pages": "^0.10.0",
+    "jasmine": "^2.4.1",
+    "jshint": "^2.9.1"
   },
   "scripts": {
     "test": "jshint *.js && jasmine",
