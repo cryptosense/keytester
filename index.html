@@ -84,7 +84,14 @@
                     <div id="key-group" class="form-group">
                         <label for="form-ssh-key" class="col-md-3 control-label">Public SSH key</label>
                         <div class="col-md-9">
-                            <textarea required pattern=".*ssh-rsa.*" name="key" class="form-control" id="form-ssh-key"></textarea>
+                            <textarea
+                                 required
+                                 pattern=".*ssh-rsa.*"
+                                 placeholder="ssh-rsa AAAAAA1234567890AAAAA== you@yourmachine"
+                                 name="key"
+                                 class="form-control"
+                                 id="form-ssh-key"
+                                 ></textarea>
                             <p class="help-block">
                                 Your SSH key can be found in <code>.ssh/id_rsa.pub</code>.
                                 Don't paste your private key!
