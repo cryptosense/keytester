@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 set -u
+git config --global user.email 'keytester@cryptosense.com'
+git config --global user.name 'Travis CI (keytester)'
 git clone "https://$GH_TOKEN@github.com/cryptosense/keytester.git"
 for f in index.html static/bundle.js ; do
     cp "$f" "keytester/$f"
