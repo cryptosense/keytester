@@ -9,5 +9,6 @@ for f in index.html static/bundle.js ; do
 done
 cd keytester
 git add .
+git diff-index --quiet HEAD && exit 0
 git commit -m "Deploy to gh-pages"
 git push -f origin gh-pages
