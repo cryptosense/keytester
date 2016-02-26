@@ -56,26 +56,6 @@ function updateBatchResult() {
 
 }
 
-function noFAQ() {
-    $('.extra-text').hide();
-    $('.short-text').show();
-    $('#form-ssh-key').attr('rows', '10');
-}
-
-function pickVariation() {
-    return cxApi.chooseVariation();
-}
-
-function setupAB() {
-    var chosenVariation = pickVariation();
-    console.log(chosenVariation);
-    var variations = [
-        function () {},
-        noFAQ
-    ];
-    variations[chosenVariation]();
-}
-
 function sendDebug($form, success) {
     alert($form.serialize());
     success();
@@ -112,7 +92,6 @@ function run(debug) {
                 afterSubmit($form);
             });
         });
-        setupAB();
     });
 }
 
