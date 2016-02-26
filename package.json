@@ -23,7 +23,7 @@
     "url": "https://github.com/cryptosense/keytester.git"
   },
   "author": "Etienne Millon <etienne@cryptosense.com>",
-  "license": "ISC",
+  "license": "BSD 2-clause",
   "bugs": {
     "url": "https://github.com/cryptosense/keytester/issues"
   }
