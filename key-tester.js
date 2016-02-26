@@ -18,6 +18,14 @@ function trialDivision(key) {
     var result = rsa.isDivisibleByASmallPrime(n, 1000000);
     return result;
 }
+
+function asyncTrialDivision(key, callback) {
+    setTimeout(function() {
+        var r = trialDivision(key);
+        callback(r);
+    }, 50);
+}
+
 function updateTrialResult(result) {
     var text;
     var cls;
@@ -40,6 +48,9 @@ function updateTrialResult(result) {
 
 function afterSubmit($form) {
     updateBatchResult();
+    $form.find('[name=key]').val('');
+    $form.after($('<h1>').addClass('text-center').text('Thanks!'));
+    $form.slideUp();
     ga('send', 'event', 'form', 'submit');
     if ($form.find('[name=newsletter]').is(':checked')) {
         ga('send', 'event', 'newsletter', 'subscribe');
@@ -57,7 +68,7 @@ function updateBatchResult() {
 }
 
 function sendDebug($form, success) {
-    alert($form.serialize());
+    console.log($form.serialize());
     success();
 }
 
@@ -82,14 +93,15 @@ function run(debug) {
         $('#ssh-form').submit(function(e) {
             e.preventDefault();
             var key = $('#form-ssh-key').val();
-            var result = trialDivision(key);
             var $form = $(this);
-            updateTrialResult(result);
-
             var send = debug ? sendDebug : sendForReal;
 
-            send($form, function() {
-                afterSubmit($form);
+            $form.find('[type=submit]').prop('disabled', true);
+            asyncTrialDivision(key, function(result) {
+                updateTrialResult(result);
+                send($form, function() {
+                    afterSubmit($form);
+                });
             });
         });
     });
