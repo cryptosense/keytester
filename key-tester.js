@@ -40,6 +40,9 @@ function updateTrialResult(result) {
 
 function afterSubmit($form) {
     updateBatchResult();
+    $form.find('[name=key]').val('');
+    $form.after($('<h1>').addClass('text-center').text('Thanks!'));
+    $form.slideUp();
     ga('send', 'event', 'form', 'submit');
     if ($form.find('[name=newsletter]').is(':checked')) {
         ga('send', 'event', 'newsletter', 'subscribe');
