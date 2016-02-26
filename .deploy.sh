@@ -11,4 +11,4 @@ cd keytester
 git add .
 git diff-index --quiet HEAD && exit 0
 git commit -m "Deploy to gh-pages"
-git push -f origin gh-pages
+git push -f origin gh-pages >/dev/null 2>&1 # Don't display token
