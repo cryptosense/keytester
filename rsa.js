@@ -1,35 +1,10 @@
 var bigInt = require('big-integer');
 
-function decodeBase64(s) {
-    var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
-    var A="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    for(i=0;i<64;i++){e[A.charAt(i)]=i;}
-    for(x=0;x<L;x++){
-        c=e[s.charAt(x)];b=(b<<6)+c;l+=6;
-        while (l>=8) {
-            if ((a=(b>>>(l-=8))&0xff)||(x<(L-2))) {
-               r+=w(a);
-            }
-        }
-    }
-    return r;
-}
-
-function readLen(buf) {
-    var i = 0;
-    var b0 = buf.charCodeAt(0);
-    var b1 = buf.charCodeAt(1);
-    var b2 = buf.charCodeAt(2);
-    var b3 = buf.charCodeAt(3);
-    var len = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
-    return len;
-}
-
-function parseBigInt(str) {
+function parseBigInt(buf) {
     var n = bigInt();
     var i;
-    for(i = 0; i < str.length ; i++) {
-        n = n.times(256).plus(str.charCodeAt(i));
+    for(i = 0; i < buf.length ; i++) {
+        n = n.times(256).plus(buf[i]);
     }
     return n;
 }
@@ -41,16 +16,16 @@ function parse(key) {
         return {'error': 'This is not a RSA key'};
     }
     var blob = parts[1];
-    var buf = decodeBase64(blob);
-    var len1 = readLen(buf);
-    var v1 = buf.substr(4, len1);
-    buf = buf.substr(4 + len1);
-    var len2 = readLen(buf);
-    var v2 = buf.substr(4, len2);
-    buf = buf.substr(4 + len2);
-    var len3 = readLen(buf); var v3 = buf.substr(4, len3);
-    buf = buf.substr(4 + len3);
-    return { 'type': v1, 'e': parseBigInt(v2), 'n': parseBigInt(v3) };
+    var buf = new Buffer(blob, 'base64');
+    var len1 = buf.readInt32BE(0);
+    var off1 = 4 + len1;
+    var v1 = buf.slice(4, off1);
+    var len2 = buf.readInt32BE(off1);
+    var off2 = off1 + 4 + len2;
+    var v2 = buf.slice(off1 + 4, off2);
+    var len3 = buf.readInt32BE(off2);
+    var v3 = buf.slice(off2 + 4, off2 + 4 + len3);
+    return { 'type': v1.toString(), 'e': parseBigInt(v2), 'n': parseBigInt(v3) };
 }
 
 function eratosthenes (n) {
