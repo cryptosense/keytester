@@ -1,4 +1,4 @@
-Cryptosense Key tester
+Cryptosense Key tester [![Build Status](https://travis-ci.org/cryptosense/keytester.svg?branch=master)](https://travis-ci.org/cryptosense/keytester) [![Dependency Status](https://gemnasium.com/cryptosense/keytester.svg)](https://gemnasium.com/cryptosense/keytester)
 ----------------------
 
 The [Key tester](https://cryptosense.github.io/keytester) runs several checks on
