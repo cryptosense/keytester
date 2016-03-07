@@ -58,7 +58,7 @@ function afterSubmit($form) {
 }
 
 function updateBatchResult() {
-    var text = "Your key has been submitted to out next batch-GCD run and we will inform you in case your key is sharing a factor with another one.";
+    var text = "Your key has been submitted to our next batch-GCD run and we will inform you in case your key is sharing a factor with another one.";
     $('#batch-result-text').text(text);
     $('#batch-result-row').removeClass();
     $('#batch-result-row').addClass("bg-warning");
