@@ -18,6 +18,10 @@ describe('A RSA key', function() {
         expect(key).not.toBeNull();
     });
 
+    it('has no errors', function() {
+        expect(key.error).toBeNull();
+    });
+
     it('has a type', function() {
         expect(key.type).toEqual('ssh-rsa');
     });

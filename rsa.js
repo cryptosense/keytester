@@ -28,7 +28,7 @@ function parse(key) {
     var v2 = buf.slice(off1 + 4, off2);
     var len3 = buf.readInt32BE(off2);
     var v3 = buf.slice(off2 + 4, off2 + 4 + len3);
-    return { 'type': v1.toString(), 'e': parseBigInt(v2), 'n': parseBigInt(v3) };
+    return { 'type': v1.toString(), 'e': parseBigInt(v2), 'n': parseBigInt(v3), 'error': null };
 }
 
 function eratosthenes (n) {
