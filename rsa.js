@@ -10,6 +10,9 @@ function parseBigInt(buf) {
 }
 
 function parse(key) {
+    if (! key.startsWith('ssh-')) {
+        return {'error': 'This does not look like a public SSH key.'};
+    }
     var parts = key.split(' ');
     var keyType = parts[0];
     if (keyType !== 'ssh-rsa') {

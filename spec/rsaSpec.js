@@ -49,6 +49,6 @@ describe('A RSA key', function() {
 describe('An invalid key', function() {
     it('is not a valid key', function () {
         var key = rsa.parse('Something something');
-        expect(key.error).toBe('This is not a RSA key');
+        expect(key.error).toBe('This does not look like a public SSH key.');
     });
 });
