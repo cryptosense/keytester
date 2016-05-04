@@ -10,10 +10,13 @@ function parseBigInt(buf) {
 }
 
 function parse(key) {
+    if (! key.startsWith('ssh-')) {
+        return {'error': 'This does not look like a public SSH key.'};
+    }
     var parts = key.split(' ');
     var keyType = parts[0];
     if (keyType !== 'ssh-rsa') {
-        return {'error': 'This is not a RSA key'};
+        return {'error': 'This test is only meaningful for RSA keys.'};
     }
     var blob = parts[1];
     var buf = new Buffer(blob, 'base64');
@@ -25,7 +28,7 @@ function parse(key) {
     var v2 = buf.slice(off1 + 4, off2);
     var len3 = buf.readInt32BE(off2);
     var v3 = buf.slice(off2 + 4, off2 + 4 + len3);
-    return { 'type': v1.toString(), 'e': parseBigInt(v2), 'n': parseBigInt(v3) };
+    return { 'type': v1.toString(), 'e': parseBigInt(v2), 'n': parseBigInt(v3), 'error': null };
 }
 
 function eratosthenes (n) {

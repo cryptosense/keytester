@@ -3,12 +3,13 @@ var $ = require('jquery');
 
 function check_ssh_key() {
     var key = $('#form-ssh-key').val();
-    var is_key = key.match(/ssh-rsa/);
-    if (is_key) {
+    var parsed_key = rsa.parse(key);
+    if (parsed_key.error === null) {
         $('#key-group').removeClass('has-error');
         $('#key-text-error').hide();
     } else {
         $('#key-group').addClass('has-error');
+        $('#key-text-error').text(parsed_key.error);
         $('#key-text-error').show();
     }
 }
