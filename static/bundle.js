@@ -117,7 +117,7 @@ module.exports = {
     run: run
 };
 
-},{"./rsa.js":9,"jquery":8}],3:[function(require,module,exports){
+},{"./rsa.js":10,"jquery":8}],3:[function(require,module,exports){
 var bigInt = (function (undefined) {
     "use strict";
 
@@ -13078,8 +13078,55 @@ return jQuery;
 }));
 
 },{}],9:[function(require,module,exports){
+(function(root) {
+  'use strict';
+
+  function sieveOfErathosthenes(max) {
+    var flags = [];
+    var primes = [];
+    var prime = 2;
+
+    var n = max;
+    while(n--) {
+      flags[max-n] = true;
+    }
+
+    for (prime = 2; prime < Math.sqrt(max); prime++) {
+      if (flags[prime]) {
+        for (var j = prime + prime; j < max; j += prime) {
+          flags[j] = false;
+        }
+      }
+    }
+
+    for (var i = 2; i < max; i++) {
+      if (flags[i]) {
+        primes.push(i);
+      }
+    }
+
+    return primes;
+  }
+
+  if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = sieveOfErathosthenes;
+    }
+    exports.sieveOfErathosthenes = sieveOfErathosthenes;
+  } else if (typeof define === 'function' && define.amd) {
+    define([], function() {
+      return sieveOfErathosthenes;
+    });
+  } else {
+    root.sieveOfErathosthenes = sieveOfErathosthenes;
+  }
+
+})(this);
+
+},{}],10:[function(require,module,exports){
 (function (Buffer){
 var bigInt = require('big-integer');
+var sieveOfErathosthenes = require('sieve-of-eratosthenes');
 
 function parseBigInt(buf) {
     var n = bigInt();
@@ -13112,33 +13159,8 @@ function parse(key) {
     return { 'type': v1.toString(), 'e': parseBigInt(v2), 'n': parseBigInt(v3), 'error': null };
 }
 
-function eratosthenes (n) {
-    var array = [], upperLimit = Math.sqrt(n), output = [];
-    var i;
-
-    for (i = 0; i < n; i++) {
-        array.push(true);
-    }
-
-    for (i = 2; i <= upperLimit; i++) {
-        if (array[i]) {
-            for (var j = i * i; j < n; j += i) {
-                array[j] = false;
-            }
-        }
-    }
-    
-    for (i = 2; i < n; i++) {
-        if(array[i]) {
-            output.push(i);
-        }
-    }
-
-    return output;
-}
-
 function isDivisibleByASmallPrime(n, maxPrime) {
-    var primes = eratosthenes(maxPrime);
+    var primes = sieveOfErathosthenes(maxPrime);
     for (var i = 0; i < primes.length; i ++) {
         var prime = primes[i];
         if (n.isDivisibleBy(prime)) {
@@ -13154,4 +13176,4 @@ module.exports = {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"big-integer":3,"buffer":4}]},{},[1]);
+},{"big-integer":3,"buffer":4,"sieve-of-eratosthenes":9}]},{},[1]);
