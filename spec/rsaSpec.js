@@ -51,9 +51,18 @@ describe('A RSA key', function() {
 });
 
 describe('An invalid key', function() {
+    var key;
+
+    beforeEach(function() {
+        key = rsa.parse('Something something');
+    });
+
     it('is not a valid key', function () {
-        var key = rsa.parse('Something something');
         expect(key.error).toBe('This does not look like a public SSH key.');
+    });
+
+    it('has no modulus', function() {
+        expect(key.n).toBeUndefined();
     });
 });
 
