@@ -16,7 +16,7 @@ function parse(key) {
     var parts = key.split(' ');
     var keyType = parts[0];
     if (keyType !== 'ssh-rsa') {
-        return {'error': 'This is not a RSA key'};
+        return {'error': 'This test is only meaningful for RSA keys.'};
     }
     var blob = parts[1];
     var buf = new Buffer(blob, 'base64');

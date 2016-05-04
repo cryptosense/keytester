@@ -56,3 +56,10 @@ describe('An invalid key', function() {
         expect(key.error).toBe('This does not look like a public SSH key.');
     });
 });
+
+describe('A DSS key', function() {
+    it('is not a RSA key', function () {
+        var key = rsa.parse('ssh-dss AAAAB3NzaC1kc3MAAACBAOK/exPNMS6NnDqIZ6oiRumNO9ZIOO6BUTOoCR2TeUepQZUjpSEsilxDYqiIEjFhBwtilD079pIq45TRs3za9Netpm6mTlmlDFR0p+v0Rg2A+JhVIh1pMbD6gh0r70GbkCiqkRIJt1H+dOeSbNrwn1AFS768SFQPe8MJG0bZn8fzAAAAFQChS0TVQbl4MrUQ+i2vyTp74qLWUwAAAIBLIJNQ+oK5gYHIqP/H4JBleVn21a7kw6EHXtepgxKzYcLM6DD+UOIijPanBuHxBPPYolG7raUfnBWhdoNrE7C4Akshu2ykCxk78MbeV2xxL30SXXaZU+lt6qG5MLDoteuOTP4mRffSHh0ZWBXIHlKBVD3VmocwUd2TUmoDIXcFCAAAAIAk3k7mOfL73zstV2Owf8mps5mh5y6CCVWUlARlmFb84+1nQJVyzQfJfHAbEo6ad6vaawnKArNjl7nCBdfgHdAo+N0Ong4VrzeKXWCYhrj2B3T5J07y7cGVNu7dV0dfktJ62xLew9z0DpfGwzE5f0ln0oAtecGgScI3Fp+Ne8jv6A== me@host');
+        expect(key.error).toBe('This test is only meaningful for RSA keys.');
+    });
+});
