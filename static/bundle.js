@@ -122,6 +122,11 @@ function run(debug) {
             e.preventDefault();
             $('#github-fetch-form').show();
         });
+        var hash = window.location.hash;
+        if (hash.startsWith('#key=')){
+            var key = decodeURIComponent(hash.substr(5));
+            $("#form-ssh-key").val(key);
+        }
     });
 }
 
