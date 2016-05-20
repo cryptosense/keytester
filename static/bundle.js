@@ -110,6 +110,18 @@ function run(debug) {
                 });
             });
         });
+        $('#form-github-go').click(function() {
+            var user = $('#form-github-username').val();
+            var url = "https://api.github.com/users/" + user + "/keys";
+            $.getJSON(url, function(data) {
+                var key = data[0].key;
+                $("#form-ssh-key").val(key);
+            });
+        });
+        $('#fetch-form-link').click(function(e) {
+            e.preventDefault();
+            $('#github-fetch-form').show();
+        });
     });
 }
 
