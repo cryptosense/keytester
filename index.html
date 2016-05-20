@@ -60,8 +60,8 @@
                 <form id="ssh-form" class="form-horizontal" accept-charset="UTF-8" action="https://formkeep.com/f/55d47b4e9575" method="POST">
                     <input type="hidden" name="utf8" value="✓">
                     <div id="key-group" class="form-group">
-                        <label for="form-ssh-key" class="col-md-3 control-label">Public SSH key</label>
-                        <div class="col-md-9">
+                        <label for="form-ssh-key" class="col-md-2 control-label">Public SSH key</label>
+                        <div class="col-md-7">
                             <textarea
                                  required
                                  pattern=".*ssh-rsa.*"
@@ -74,11 +74,36 @@
                                 Your SSH key can be found in <code>.ssh/id_rsa.pub</code>.
                                 Don't paste your private key!
                             </p>
+                            <p class="help-block">
+                                If you have a github account <a href="#"
+                                    id="fetch-form-link">you can click
+                                    here</a> to fetch your key from there.
+                            </p>
                             <p id="key-text-error" class="bg-danger" style="display: none"></p>
+                        </div>
+                        <div class="col-md-3" style="display: none" id="github-fetch-form">
+                            <div class="input-group">
+                                <input type="text"
+                                       class="form-control"
+                                id="form-github-username"
+                                placeholder="Github username"
+                                >
+                                <span class="input-group-btn">
+                                <button type="button" id="form-github-go"
+                                                      class="btn btn-info">
+                                                      Fetch
+                                </button>
+                                </span>
+                            </div>
+                            <p class="help-block">
+                                We can prefill the form using the
+                                the first key listed on your
+                                profile.
+                            </p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="form-email" class="col-md-3 control-label">E-mail address</label>
+                        <label for="form-email" class="col-md-2 control-label">E-mail address</label>
                         <div class="col-md-9">
                             <input required type="email" name="email" placeholder="me@domain.com" id="form-email"></input>
                             <p class="help-block">
@@ -87,7 +112,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="form-newsletter" class="col-md-3
+                        <label for="form-newsletter" class="col-md-2
                             control-label">Newsletter</label>
                         <div class="col-md-9">
                             <input type="checkbox" name="newsletter" id="form-newsletter" checked></input>
