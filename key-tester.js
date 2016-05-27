@@ -68,25 +68,25 @@ function updateBatchResult() {
 
 }
 
-function sendDebug($form, success) {
-    console.log($form.serialize());
-    success();
+function send(form_url, $form, success) {
+    if (form_url === undefined) {
+        console.log($form.serialize());
+        success();
+    } else {
+        $.ajax({
+            method: "POST",
+            url: form_url,
+            data: $form.serialize(),
+            success: function() { success(); },
+            error: function(e) { console.log(e); },
+            headers: {
+                'Accept': "application/javascript",
+            }
+        });
+    }
 }
 
-function sendForReal($form, success) {
-    $.ajax({
-        method: "POST",
-        url: $form.attr("action"),
-        data: $form.serialize(),
-        success: function() { success(); },
-        error: function(e) { console.log(e); },
-        headers: {
-            'Accept': "application/javascript",
-        }
-    });
-}
-
-function run(debug) {
+function run(form_url) {
     $(document).ready(function() {
         $('#form-ssh-key').change(function() {
             check_ssh_key();
@@ -95,12 +95,11 @@ function run(debug) {
             e.preventDefault();
             var key = $('#form-ssh-key').val();
             var $form = $(this);
-            var send = debug ? sendDebug : sendForReal;
 
             $form.find('[type=submit]').prop('disabled', true);
             asyncTrialDivision(key, function(result) {
                 updateTrialResult(result);
-                send($form, function() {
+                send(form_url, $form, function() {
                     afterSubmit($form);
                 });
             });
