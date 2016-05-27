@@ -923,6 +923,59 @@
         }
       }
     },
+    "envify": {
+      "version": "3.4.0",
+      "from": "envify@",
+      "resolved": "https://registry.npmjs.org/envify/-/envify-3.4.0.tgz",
+      "dependencies": {
+        "through": {
+          "version": "2.3.8",
+          "from": "through@~2.3.4",
+          "resolved": "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
+        },
+        "jstransform": {
+          "version": "10.1.0",
+          "from": "jstransform@^10.0.1",
+          "resolved": "https://registry.npmjs.org/jstransform/-/jstransform-10.1.0.tgz",
+          "dependencies": {
+            "base62": {
+              "version": "0.1.1",
+              "from": "base62@0.1.1",
+              "resolved": "https://registry.npmjs.org/base62/-/base62-0.1.1.tgz"
+            },
+            "esprima-fb": {
+              "version": "13001.1001.0-dev-harmony-fb",
+              "from": "esprima-fb@13001.1001.0-dev-harmony-fb",
+              "resolved": "https://registry.npmjs.org/esprima-fb/-/esprima-fb-13001.1001.0-dev-harmony-fb.tgz"
+            },
+            "source-map": {
+              "version": "0.1.31",
+              "from": "source-map@0.1.31",
+              "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.31.tgz",
+              "dependencies": {
+                "amdefine": {
+                  "version": "1.0.0",
+                  "from": "amdefine@>=0.0.4",
+                  "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-1.0.0.tgz"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ga-browser": {
+      "version": "1.0.0",
+      "from": "ga-browser@",
+      "resolved": "https://registry.npmjs.org/ga-browser/-/ga-browser-1.0.0.tgz",
+      "dependencies": {
+        "escape-html": {
+          "version": "1.0.3",
+          "from": "escape-html@^1.0.1",
+          "resolved": "https://registry.npmjs.org/escape-html/-/escape-html-1.0.3.tgz"
+        }
+      }
+    },
     "jasmine": {
       "version": "2.4.1",
       "from": "jasmine@^2.4.1",

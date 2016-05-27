@@ -47,14 +47,16 @@ function updateTrialResult(result) {
     $('#trial-result-icon').addClass(icon);
 }
 
-function afterSubmit($form) {
+function afterSubmit($form, ga) {
     updateBatchResult();
     $form.find('[name=key]').val('');
     $form.after($('<h1>').addClass('text-center').text('Thanks!'));
     $form.slideUp();
-    ga('send', 'event', 'form', 'submit');
-    if ($form.find('[name=newsletter]').is(':checked')) {
-        ga('send', 'event', 'newsletter', 'subscribe');
+    if (ga !== undefined) {
+        ga('send', 'event', 'form', 'submit');
+        if ($form.find('[name=newsletter]').is(':checked')) {
+            ga('send', 'event', 'newsletter', 'subscribe');
+        }
     }
 }
 
@@ -68,26 +70,37 @@ function updateBatchResult() {
 
 }
 
-function sendDebug($form, success) {
-    console.log($form.serialize());
-    success();
+function send(form_url, $form, success) {
+    if (form_url === undefined) {
+        console.log($form.serialize());
+        success();
+    } else {
+        $.ajax({
+            method: "POST",
+            url: form_url,
+            data: $form.serialize(),
+            success: function() { success(); },
+            error: function(e) { console.log(e); },
+            headers: {
+                'Accept': "application/javascript",
+            }
+        });
+    }
 }
 
-function sendForReal($form, success) {
-    $.ajax({
-        method: "POST",
-        url: $form.attr("action"),
-        data: $form.serialize(),
-        success: function() { success(); },
-        error: function(e) { console.log(e); },
-        headers: {
-            'Accept': "application/javascript",
-        }
-    });
+function init_analytics(ga_code) {
+    if (ga_code === undefined) {
+        return undefined;
+    }
+    var ga = require('ga-browser');
+    ga('create', ga_code, 'auto');
+    ga('send', 'pageview');
+    return ga;
 }
 
-function run(debug) {
+function run(form_url, ga_code) {
     $(document).ready(function() {
+        var ga = init_analytics();
         $('#form-ssh-key').change(function() {
             check_ssh_key();
         });
@@ -95,13 +108,12 @@ function run(debug) {
             e.preventDefault();
             var key = $('#form-ssh-key').val();
             var $form = $(this);
-            var send = debug ? sendDebug : sendForReal;
 
             $form.find('[type=submit]').prop('disabled', true);
             asyncTrialDivision(key, function(result) {
                 updateTrialResult(result);
-                send($form, function() {
-                    afterSubmit($form);
+                send(form_url, $form, function() {
+                    afterSubmit($form, ga);
                 });
             });
         });
