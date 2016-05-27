@@ -7,6 +7,7 @@
     "big-integer": "^1.4.6",
     "browserify": "^13.0.0",
     "envify": "^3.4.0",
+    "ga-browser": "^1.0.0",
     "jquery": "^2.2.1",
     "sieve-of-eratosthenes": "0.0.2"
   },

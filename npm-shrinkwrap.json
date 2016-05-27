@@ -964,6 +964,18 @@
         }
       }
     },
+    "ga-browser": {
+      "version": "1.0.0",
+      "from": "ga-browser@",
+      "resolved": "https://registry.npmjs.org/ga-browser/-/ga-browser-1.0.0.tgz",
+      "dependencies": {
+        "escape-html": {
+          "version": "1.0.3",
+          "from": "escape-html@^1.0.1",
+          "resolved": "https://registry.npmjs.org/escape-html/-/escape-html-1.0.3.tgz"
+        }
+      }
+    },
     "jasmine": {
       "version": "2.4.1",
       "from": "jasmine@^2.4.1",

@@ -47,14 +47,16 @@ function updateTrialResult(result) {
     $('#trial-result-icon').addClass(icon);
 }
 
-function afterSubmit($form) {
+function afterSubmit($form, ga) {
     updateBatchResult();
     $form.find('[name=key]').val('');
     $form.after($('<h1>').addClass('text-center').text('Thanks!'));
     $form.slideUp();
-    ga('send', 'event', 'form', 'submit');
-    if ($form.find('[name=newsletter]').is(':checked')) {
-        ga('send', 'event', 'newsletter', 'subscribe');
+    if (ga !== undefined) {
+        ga('send', 'event', 'form', 'submit');
+        if ($form.find('[name=newsletter]').is(':checked')) {
+            ga('send', 'event', 'newsletter', 'subscribe');
+        }
     }
 }
 
@@ -86,8 +88,19 @@ function send(form_url, $form, success) {
     }
 }
 
-function run(form_url) {
+function init_analytics(ga_code) {
+    if (ga_code === undefined) {
+        return undefined;
+    }
+    var ga = require('ga-browser');
+    ga('create', ga_code, 'auto');
+    ga('send', 'pageview');
+    return ga;
+}
+
+function run(form_url, ga_code) {
     $(document).ready(function() {
+        var ga = init_analytics();
         $('#form-ssh-key').change(function() {
             check_ssh_key();
         });
@@ -100,7 +113,7 @@ function run(form_url) {
             asyncTrialDivision(key, function(result) {
                 updateTrialResult(result);
                 send(form_url, $form, function() {
-                    afterSubmit($form);
+                    afterSubmit($form, ga);
                 });
             });
         });
