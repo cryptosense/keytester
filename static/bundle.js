@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var key_tester = require('./key-tester.js');
-key_tester.run(false);
+key_tester.run(undefined, undefined);
 
 },{"./key-tester.js":2}],2:[function(require,module,exports){
 var rsa = require('./rsa.js');
@@ -52,14 +52,16 @@ function updateTrialResult(result) {
     $('#trial-result-icon').addClass(icon);
 }
 
-function afterSubmit($form) {
+function afterSubmit($form, ga) {
     updateBatchResult();
     $form.find('[name=key]').val('');
     $form.after($('<h1>').addClass('text-center').text('Thanks!'));
     $form.slideUp();
-    ga('send', 'event', 'form', 'submit');
-    if ($form.find('[name=newsletter]').is(':checked')) {
-        ga('send', 'event', 'newsletter', 'subscribe');
+    if (ga !== undefined) {
+        ga('send', 'event', 'form', 'submit');
+        if ($form.find('[name=newsletter]').is(':checked')) {
+            ga('send', 'event', 'newsletter', 'subscribe');
+        }
     }
 }
 
@@ -73,26 +75,37 @@ function updateBatchResult() {
 
 }
 
-function sendDebug($form, success) {
-    console.log($form.serialize());
-    success();
+function send(form_url, $form, success) {
+    if (form_url === undefined) {
+        console.log($form.serialize());
+        success();
+    } else {
+        $.ajax({
+            method: "POST",
+            url: form_url,
+            data: $form.serialize(),
+            success: function() { success(); },
+            error: function(e) { console.log(e); },
+            headers: {
+                'Accept': "application/javascript",
+            }
+        });
+    }
 }
 
-function sendForReal($form, success) {
-    $.ajax({
-        method: "POST",
-        url: $form.attr("action"),
-        data: $form.serialize(),
-        success: function() { success(); },
-        error: function(e) { console.log(e); },
-        headers: {
-            'Accept': "application/javascript",
-        }
-    });
+function init_analytics(ga_code) {
+    if (ga_code === undefined) {
+        return undefined;
+    }
+    var ga = require('ga-browser');
+    ga('create', ga_code, 'auto');
+    ga('send', 'pageview');
+    return ga;
 }
 
-function run(debug) {
+function run(form_url, ga_code) {
     $(document).ready(function() {
+        var ga = init_analytics();
         $('#form-ssh-key').change(function() {
             check_ssh_key();
         });
@@ -100,13 +113,12 @@ function run(debug) {
             e.preventDefault();
             var key = $('#form-ssh-key').val();
             var $form = $(this);
-            var send = debug ? sendDebug : sendForReal;
 
             $form.find('[type=submit]').prop('disabled', true);
             asyncTrialDivision(key, function(result) {
                 updateTrialResult(result);
-                send($form, function() {
-                    afterSubmit($form);
+                send(form_url, $form, function() {
+                    afterSubmit($form, ga);
                 });
             });
         });
@@ -134,7 +146,7 @@ module.exports = {
     run: run
 };
 
-},{"./rsa.js":10,"jquery":8}],3:[function(require,module,exports){
+},{"./rsa.js":12,"ga-browser":8,"jquery":10}],3:[function(require,module,exports){
 var bigInt = (function (undefined) {
     "use strict";
 
@@ -3251,6 +3263,189 @@ module.exports = Array.isArray || function (arr) {
 };
 
 },{}],8:[function(require,module,exports){
+(function (global){
+'use strict';
+var htmlEscape = require('escape-html');
+
+/**
+ * @module ga-browser
+ */
+module.exports = function(windowObject)
+{
+        var window = windowObject || global.window;
+
+        if (!window)
+        {
+                // e.g. server side in node.js
+                return function() { /* noop */ };
+        }
+
+        var ga = function googleAnalytics()
+        {
+                return window[ga.globalName].apply(window, arguments);
+        };
+
+        ga.globalName = 'ga';
+        if (typeof window.GoogleAnalyticsObject === 'string')
+        {
+                ga.globalName = window.GoogleAnalyticsObject.trim() || 'ga';
+        }
+
+        if (!window[ga.globalName])
+        {
+                window[ga.globalName] = function()
+                {
+                        (window[ga.globalName].q = window[ga.globalName].q || []).push(arguments);
+                };
+
+                window[ga.globalName].l = +new Date();
+        }
+
+        return ga;
+};
+
+/**
+ * URL referencing Google's Universal Analytics script
+ * @type {string}
+ */
+module.exports.scriptUrl = '//www.google-analytics.com/analytics.js';
+
+/**
+ * URL referencing the debug version of Google's Universal Analytics script
+ * @type {string}
+ */
+module.exports.debugScriptUrl = '//www.google-analytics.com/analytics_debug.js';
+
+/**
+ * Returns the html markup of the script element for the google analytics script
+ * @param {Boolean} [debug=false] If set, use the debug version instead
+ * @returns {string}
+ */
+module.exports.getScriptMarkup = function(debug)
+{
+        var url = debug ? module.exports.debugScriptUrl : module.exports.scriptUrl;
+        return '<script async="async" src="' + htmlEscape(url) + '"></script>';
+};
+
+/**
+ * Add a script element for the google analytics script to the given DOM document
+ * @param {HTMLDocument|HTMLHeadElement} documentOrHead
+ * @param {Boolean} [debug=false] If set, use the debug version instead
+ * @returns {HTMLScriptElement}
+ */
+module.exports.insertScript = function(documentOrHead, debug)
+{
+        if (!documentOrHead)
+        {
+                throw Error('Missing argument');
+        }
+
+        var document = documentOrHead.nodeType === 9 // DOCUMENT_NODE
+                ? documentOrHead
+                : documentOrHead.ownerDocument;
+
+        var head = documentOrHead.nodeType === 1 // ELEMENT_NODE
+                ? documentOrHead
+                : document.getElementsByTagName('head')[0];
+
+        var url = debug
+                ? module.exports.debugScriptUrl
+                : module.exports.scriptUrl;
+
+        if (!head)
+        {
+                throw Error('Missing <head> element');
+        }
+
+        var script = document.createElement('script');
+        script.setAttribute('async', 'async');
+        script.setAttribute('src', url);
+        head.appendChild(script);
+        return script;
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"escape-html":9}],9:[function(require,module,exports){
+/*!
+ * escape-html
+ * Copyright(c) 2012-2013 TJ Holowaychuk
+ * Copyright(c) 2015 Andreas Lubbe
+ * Copyright(c) 2015 Tiancheng "Timothy" Gu
+ * MIT Licensed
+ */
+
+'use strict';
+
+/**
+ * Module variables.
+ * @private
+ */
+
+var matchHtmlRegExp = /["'&<>]/;
+
+/**
+ * Module exports.
+ * @public
+ */
+
+module.exports = escapeHtml;
+
+/**
+ * Escape special characters in the given string of html.
+ *
+ * @param  {string} string The string to escape for inserting into HTML
+ * @return {string}
+ * @public
+ */
+
+function escapeHtml(string) {
+  var str = '' + string;
+  var match = matchHtmlRegExp.exec(str);
+
+  if (!match) {
+    return str;
+  }
+
+  var escape;
+  var html = '';
+  var index = 0;
+  var lastIndex = 0;
+
+  for (index = match.index; index < str.length; index++) {
+    switch (str.charCodeAt(index)) {
+      case 34: // "
+        escape = '&quot;';
+        break;
+      case 38: // &
+        escape = '&amp;';
+        break;
+      case 39: // '
+        escape = '&#39;';
+        break;
+      case 60: // <
+        escape = '&lt;';
+        break;
+      case 62: // >
+        escape = '&gt;';
+        break;
+      default:
+        continue;
+    }
+
+    if (lastIndex !== index) {
+      html += str.substring(lastIndex, index);
+    }
+
+    lastIndex = index + 1;
+    html += escape;
+  }
+
+  return lastIndex !== index
+    ? html + str.substring(lastIndex, index)
+    : html;
+}
+
+},{}],10:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.3
  * http://jquery.com/
@@ -13094,7 +13289,7 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function(root) {
   'use strict';
 
@@ -13140,7 +13335,7 @@ return jQuery;
 
 })(this);
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (Buffer){
 var bigInt = require('big-integer');
 var sieveOfErathosthenes = require('sieve-of-eratosthenes');
@@ -13193,4 +13388,4 @@ module.exports = {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"big-integer":3,"buffer":4,"sieve-of-eratosthenes":9}]},{},[1]);
+},{"big-integer":3,"buffer":4,"sieve-of-eratosthenes":11}]},{},[1]);
