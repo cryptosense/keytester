@@ -7,12 +7,15 @@ function check_ssh_key() {
     if (parsed_key.error === null) {
         $('#key-group').removeClass('has-error');
         $('#key-text-error').hide();
+        $('#key-submit').prop('disabled', false);
     } else {
         $('#key-group').addClass('has-error');
         $('#key-text-error').text(parsed_key.error);
         $('#key-text-error').show();
+        $('#key-submit').prop('disabled', true);
     }
 }
+
 function trialDivision(key) {
     var parsedKey = rsa.parse(key);
     var n = parsedKey.n;
