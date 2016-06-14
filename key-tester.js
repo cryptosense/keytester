@@ -126,6 +126,7 @@ function run(form_url, ga_code) {
             $.getJSON(url, function(data) {
                 var key = data[0].key;
                 $("#form-ssh-key").val(key);
+                $("#form-ssh-key").trigger('change');
             });
         });
         $('#fetch-form-link').click(function(e) {
@@ -136,6 +137,7 @@ function run(form_url, ga_code) {
         if (hash.startsWith('#key=')){
             var key = decodeURIComponent(hash.substr(5));
             $("#form-ssh-key").val(key);
+            $("#form-ssh-key").trigger('change');
         }
     });
 }
