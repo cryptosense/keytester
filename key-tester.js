@@ -1,31 +1,37 @@
 var rsa = require('./rsa.js');
 var $ = require('jquery');
 
+function invalidKey(msg) {
+    $('#key-group').addClass('has-error');
+    $('#key-text-error').text(msg);
+    $('#key-text-error').show();
+    $('#key-submit').prop('disabled', true);
+}
+
+function validKey(msg) {
+    $('#key-group').removeClass('has-error');
+    $('#key-text-error').hide();
+    $('#key-submit').prop('disabled', false);
+}
+
 function check_ssh_key() {
     var key = $('#form-ssh-key').val();
     var parsed_key = rsa.parse(key);
     if (parsed_key.error === null) {
-        $('#key-group').removeClass('has-error');
-        $('#key-text-error').hide();
-        $('#key-submit').prop('disabled', false);
+      validKey();
     } else {
-        $('#key-group').addClass('has-error');
-        $('#key-text-error').text(parsed_key.error);
-        $('#key-text-error').show();
-        $('#key-submit').prop('disabled', true);
+      invalidKey(parsed_key.error);
     }
 }
 
-function trialDivision(key) {
-    var parsedKey = rsa.parse(key);
-    var n = parsedKey.n;
-    var result = rsa.isDivisibleByASmallPrime(n, 1000000);
+function trialDivision(modulus) {
+    var result = rsa.isDivisibleByASmallPrime(modulus, 1000000);
     return result;
 }
 
-function asyncTrialDivision(key, callback) {
+function asyncTrialDivision(modulus, callback) {
     setTimeout(function() {
-        var r = trialDivision(key);
+        var r = trialDivision(modulus);
         callback(r);
     }, 50);
 }
@@ -110,15 +116,20 @@ function run(form_url, ga_code) {
         $('#ssh-form').submit(function(e) {
             e.preventDefault();
             var key = $('#form-ssh-key').val();
+            var parsed_key = rsa.parse(key);
             var $form = $(this);
 
-            $form.find('[type=submit]').prop('disabled', true);
-            asyncTrialDivision(key, function(result) {
-                updateTrialResult(result);
-                send(form_url, $form, function() {
-                    afterSubmit($form, ga);
+            if (parsed_key.error === null) {
+                $form.find('[type=submit]').prop('disabled', true);
+                asyncTrialDivision(parsed_key.n, function(result) {
+                    updateTrialResult(result);
+                    send(form_url, $form, function() {
+                        afterSubmit($form, ga);
+                    });
                 });
-            });
+            } else {
+              invalidKey(parsed_key.error);
+            }
         });
         $('#form-github-go').click(function() {
             var user = $('#form-github-username').val();
