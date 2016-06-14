@@ -10,14 +10,20 @@ function parseBigInt(buf) {
     return n;
 }
 
-function parse(key) {
+function parseError(message) {
+  var err = new Error(message);
+  err.name = 'ParseError';
+  throw err;
+}
+
+function parseWithErrors(key) {
     if (! key.startsWith('ssh-')) {
-        return {'error': 'This does not look like a public SSH key.'};
+        parseError('This does not look like a public SSH key.');
     }
     var parts = key.split(' ');
     var keyType = parts[0];
     if (keyType !== 'ssh-rsa') {
-        return {'error': 'This test is only meaningful for RSA keys.'};
+        parseError('This test is only meaningful for RSA keys.');
     }
     var blob = parts[1];
     var buf = new Buffer(blob, 'base64');
@@ -30,6 +36,20 @@ function parse(key) {
     var len3 = buf.readInt32BE(off2);
     var v3 = buf.slice(off2 + 4, off2 + 4 + len3);
     return { 'type': v1.toString(), 'e': parseBigInt(v2), 'n': parseBigInt(v3), 'error': null };
+}
+
+function parse(key) {
+  try {
+    return parseWithErrors(key);
+  } catch (err) {
+    var message;
+    if (err.name == 'ParseError') {
+      message = err.message;
+    } else {
+      message = 'Invalid SSH RSA public key.';
+    }
+    return { 'error': message };
+  }
 }
 
 function isDivisibleByASmallPrime(n, maxPrime) {
