@@ -72,3 +72,10 @@ describe('A DSS key', function() {
         expect(key.error).toBe('This test is only meaningful for RSA keys.');
     });
 });
+
+describe('A sanitized string', function() {
+  it('has no line breaks', function () {
+    var sanitized = rsa.sanitize('ssh-rsa somerandombase64\n\rcutwith\n\r== me@host');
+    expect(sanitized).toBe('ssh-rsa somerandombase64cutwith== me@host');
+  });
+});

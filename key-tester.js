@@ -120,6 +120,7 @@ function run(form_url, ga_code) {
             var $form = $(this);
 
             if (parsed_key.error === null) {
+                $('#form-ssh-key').val(rsa.sanitize(key));
                 $form.find('[type=submit]').prop('disabled', true);
                 asyncTrialDivision(parsed_key.n, function(result) {
                     updateTrialResult(result);

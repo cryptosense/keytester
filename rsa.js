@@ -16,7 +16,12 @@ function parseError(message) {
   throw err;
 }
 
-function parseWithErrors(key) {
+function sanitize(key) {
+  return key.replace(new RegExp('\n|\r', 'g'), '');
+}
+
+function parseWithErrors(input) {
+    var key = sanitize(input);
     if (! key.startsWith('ssh-')) {
         parseError('This does not look like a public SSH key.');
     }
@@ -64,6 +69,7 @@ function isDivisibleByASmallPrime(n, maxPrime) {
 }
 
 module.exports = {
+    sanitize: sanitize,
     parse: parse,
     isDivisibleByASmallPrime: isDivisibleByASmallPrime
 };
