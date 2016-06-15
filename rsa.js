@@ -20,26 +20,50 @@ function sanitize(key) {
   return key.replace(new RegExp('\n|\r', 'g'), '');
 }
 
+function isValidBase64(blob) {
+  var regexp = new RegExp("^[A-Za-z0-9/+]+={0,2}$");
+  return regexp.test(blob);
+}
+
+function validateBlob(blob) {
+  if (! isValidBase64(blob)) {
+    parseError('Invalid Base64 key blob.');
+  }
+}
+
+function validateValue(val, len) {
+  if (val.length != len) {
+    parseError(
+        'The key doesn\'t parse properly. ' +
+        'The key blob might have been truncated, try to copy/paste it again.'
+        );
+  }
+}
+
 function parseWithErrors(input) {
     var key = sanitize(input);
-    if (! key.startsWith('ssh-')) {
-        parseError('This does not look like a public SSH key.');
-    }
     var parts = key.split(' ');
     var keyType = parts[0];
+    if (! key.startsWith('ssh-') || parts.length < 2) {
+        parseError('This does not look like a public SSH key.');
+    }
     if (keyType !== 'ssh-rsa') {
         parseError('This test is only meaningful for RSA keys.');
     }
     var blob = parts[1];
+    validateBlob(blob);
     var buf = new Buffer(blob, 'base64');
     var len1 = buf.readInt32BE(0);
     var off1 = 4 + len1;
     var v1 = buf.slice(4, off1);
+    validateValue(v1, len1);
     var len2 = buf.readInt32BE(off1);
     var off2 = off1 + 4 + len2;
     var v2 = buf.slice(off1 + 4, off2);
+    validateValue(v2, len2);
     var len3 = buf.readInt32BE(off2);
     var v3 = buf.slice(off2 + 4, off2 + 4 + len3);
+    validateValue(v3, len3);
     return { 'type': v1.toString(), 'e': parseBigInt(v2), 'n': parseBigInt(v3), 'error': null };
 }
 
@@ -70,6 +94,7 @@ function isDivisibleByASmallPrime(n, maxPrime) {
 
 module.exports = {
     sanitize: sanitize,
+    isValidBase64: isValidBase64,
     parse: parse,
     isDivisibleByASmallPrime: isDivisibleByASmallPrime
 };
