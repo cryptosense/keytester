@@ -6,28 +6,37 @@ key_tester.run("https://formkeep.com/f/55d47b4e9575", "UA-65334070-1");
 var rsa = require('./rsa.js');
 var $ = require('jquery');
 
+function invalidKey(msg) {
+    $('#key-group').addClass('has-error');
+    $('#key-text-error').text(msg);
+    $('#key-text-error').show();
+    $('#key-submit').prop('disabled', true);
+}
+
+function validKey(msg) {
+    $('#key-group').removeClass('has-error');
+    $('#key-text-error').hide();
+    $('#key-submit').prop('disabled', false);
+}
+
 function check_ssh_key() {
     var key = $('#form-ssh-key').val();
     var parsed_key = rsa.parse(key);
     if (parsed_key.error === null) {
-        $('#key-group').removeClass('has-error');
-        $('#key-text-error').hide();
+      validKey();
     } else {
-        $('#key-group').addClass('has-error');
-        $('#key-text-error').text(parsed_key.error);
-        $('#key-text-error').show();
+      invalidKey(parsed_key.error);
     }
 }
-function trialDivision(key) {
-    var parsedKey = rsa.parse(key);
-    var n = parsedKey.n;
-    var result = rsa.isDivisibleByASmallPrime(n, 1000000);
+
+function trialDivision(modulus) {
+    var result = rsa.isDivisibleByASmallPrime(modulus, 1000000);
     return result;
 }
 
-function asyncTrialDivision(key, callback) {
+function asyncTrialDivision(modulus, callback) {
     setTimeout(function() {
-        var r = trialDivision(key);
+        var r = trialDivision(modulus);
         callback(r);
     }, 50);
 }
@@ -112,15 +121,21 @@ function run(form_url, ga_code) {
         $('#ssh-form').submit(function(e) {
             e.preventDefault();
             var key = $('#form-ssh-key').val();
+            var parsed_key = rsa.parse(key);
             var $form = $(this);
 
-            $form.find('[type=submit]').prop('disabled', true);
-            asyncTrialDivision(key, function(result) {
-                updateTrialResult(result);
-                send(form_url, $form, function() {
-                    afterSubmit($form, ga);
+            if (parsed_key.error === null) {
+                $('#form-ssh-key').val(rsa.sanitize(key));
+                $form.find('[type=submit]').prop('disabled', true);
+                asyncTrialDivision(parsed_key.n, function(result) {
+                    updateTrialResult(result);
+                    send(form_url, $form, function() {
+                        afterSubmit($form, ga);
+                    });
                 });
-            });
+            } else {
+              invalidKey(parsed_key.error);
+            }
         });
         $('#form-github-go').click(function() {
             var user = $('#form-github-username').val();
@@ -128,6 +143,7 @@ function run(form_url, ga_code) {
             $.getJSON(url, function(data) {
                 var key = data[0].key;
                 $("#form-ssh-key").val(key);
+                $("#form-ssh-key").trigger('change');
             });
         });
         $('#fetch-form-link').click(function(e) {
@@ -138,6 +154,7 @@ function run(form_url, ga_code) {
         if (hash.startsWith('#key=')){
             var key = decodeURIComponent(hash.substr(5));
             $("#form-ssh-key").val(key);
+            $("#form-ssh-key").trigger('change');
         }
     });
 }
@@ -13349,26 +13366,75 @@ function parseBigInt(buf) {
     return n;
 }
 
-function parse(key) {
-    if (! key.startsWith('ssh-')) {
-        return {'error': 'This does not look like a public SSH key.'};
-    }
+function parseError(message) {
+  var err = new Error(message);
+  err.name = 'ParseError';
+  throw err;
+}
+
+function sanitize(key) {
+  return key.replace(new RegExp('\n|\r', 'g'), '');
+}
+
+function isValidBase64(blob) {
+  var regexp = new RegExp("^[A-Za-z0-9/+]+={0,2}$");
+  return regexp.test(blob);
+}
+
+function validateBlob(blob) {
+  if (! isValidBase64(blob)) {
+    parseError('Invalid Base64 key blob.');
+  }
+}
+
+function validateValue(val, len) {
+  if (val.length != len) {
+    parseError(
+        'The key doesn\'t parse properly. ' +
+        'The key blob might have been truncated, try to copy/paste it again.'
+        );
+  }
+}
+
+function parseWithErrors(input) {
+    var key = sanitize(input);
     var parts = key.split(' ');
     var keyType = parts[0];
+    if (! key.startsWith('ssh-') || parts.length < 2) {
+        parseError('This does not look like a public SSH key.');
+    }
     if (keyType !== 'ssh-rsa') {
-        return {'error': 'This test is only meaningful for RSA keys.'};
+        parseError('This test is only meaningful for RSA keys.');
     }
     var blob = parts[1];
+    validateBlob(blob);
     var buf = new Buffer(blob, 'base64');
     var len1 = buf.readInt32BE(0);
     var off1 = 4 + len1;
     var v1 = buf.slice(4, off1);
+    validateValue(v1, len1);
     var len2 = buf.readInt32BE(off1);
     var off2 = off1 + 4 + len2;
     var v2 = buf.slice(off1 + 4, off2);
+    validateValue(v2, len2);
     var len3 = buf.readInt32BE(off2);
     var v3 = buf.slice(off2 + 4, off2 + 4 + len3);
+    validateValue(v3, len3);
     return { 'type': v1.toString(), 'e': parseBigInt(v2), 'n': parseBigInt(v3), 'error': null };
+}
+
+function parse(key) {
+  try {
+    return parseWithErrors(key);
+  } catch (err) {
+    var message;
+    if (err.name == 'ParseError') {
+      message = err.message;
+    } else {
+      message = 'Invalid SSH RSA public key.';
+    }
+    return { 'error': message };
+  }
 }
 
 function isDivisibleByASmallPrime(n, maxPrime) {
@@ -13383,6 +13449,8 @@ function isDivisibleByASmallPrime(n, maxPrime) {
 }
 
 module.exports = {
+    sanitize: sanitize,
+    isValidBase64: isValidBase64,
     parse: parse,
     isDivisibleByASmallPrime: isDivisibleByASmallPrime
 };
