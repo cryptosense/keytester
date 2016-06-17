@@ -48,6 +48,20 @@ describe('A RSA key', function() {
             expect(rsa.isDivisibleByASmallPrime(key.n, 10000)).toBe(1091);
         });
     });
+
+    describe('when it is truncated', function() {
+      beforeEach(function() {
+        encodedKey = encodedKey.slice(0,-4);
+        key = rsa.parse(encodedKey);
+      });
+
+      it('does not parse anymore', function() {
+        expect(key.error).toBe(
+            'The key doesn\'t parse properly. ' +
+            'The key blob might have been truncated, try to copy/paste it again.'
+            );
+      });
+    });
 });
 
 describe('An invalid key', function() {
@@ -71,4 +85,33 @@ describe('A DSS key', function() {
         var key = rsa.parse('ssh-dss AAAAB3NzaC1kc3MAAACBAOK/exPNMS6NnDqIZ6oiRumNO9ZIOO6BUTOoCR2TeUepQZUjpSEsilxDYqiIEjFhBwtilD079pIq45TRs3za9Netpm6mTlmlDFR0p+v0Rg2A+JhVIh1pMbD6gh0r70GbkCiqkRIJt1H+dOeSbNrwn1AFS768SFQPe8MJG0bZn8fzAAAAFQChS0TVQbl4MrUQ+i2vyTp74qLWUwAAAIBLIJNQ+oK5gYHIqP/H4JBleVn21a7kw6EHXtepgxKzYcLM6DD+UOIijPanBuHxBPPYolG7raUfnBWhdoNrE7C4Akshu2ykCxk78MbeV2xxL30SXXaZU+lt6qG5MLDoteuOTP4mRffSHh0ZWBXIHlKBVD3VmocwUd2TUmoDIXcFCAAAAIAk3k7mOfL73zstV2Owf8mps5mh5y6CCVWUlARlmFb84+1nQJVyzQfJfHAbEo6ad6vaawnKArNjl7nCBdfgHdAo+N0Ong4VrzeKXWCYhrj2B3T5J07y7cGVNu7dV0dfktJ62xLew9z0DpfGwzE5f0ln0oAtecGgScI3Fp+Ne8jv6A== me@host');
         expect(key.error).toBe('This test is only meaningful for RSA keys.');
     });
+});
+
+describe('A sanitized string', function() {
+  it('has no line breaks', function() {
+    var sanitized = rsa.sanitize('ssh-rsa somerandombase64\n\rcutwith\n\r== me@host');
+    expect(sanitized).toBe('ssh-rsa somerandombase64cutwith== me@host');
+  });
+});
+
+describe('A valid base64 blob', function() {
+  it('does not contain illegal characters', function() {
+    var base64 = 'ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    expect(rsa.isValidBase64(base64)).toBe(true);
+  });
+
+  it('can end with up to two \'=\'', function() {
+    var base64 = 'ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/==';
+    expect(rsa.isValidBase64(base64)).toBe(true);
+  });
+
+  it('can not end with more than two \'=\'', function() {
+    var base64 = 'ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/===';
+    expect(rsa.isValidBase64(base64)).toBe(false);
+  });
+
+  it('can not contain illegal characters', function() {
+    var base64 = 'ABCDEFGHJK$LMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    expect(rsa.isValidBase64(base64)).toBe(false);
+  });
 });
