@@ -4,20 +4,10 @@
   "description": "Test the strength of RSA keys",
   "main": "key-tester.js",
   "dependencies": {
-    "big-integer": "^1.4.6",
-    "browserify": "^13.0.0",
-    "envify": "^3.4.0",
-    "ga-browser": "^1.0.0",
-    "jquery": "^2.2.1",
-    "sieve-of-eratosthenes": "0.0.2"
-  },
-  "devDependencies": {
-    "jasmine": "^2.4.1",
-    "jshint": "^2.9.1"
+    "browserify": "^13.0.0"
   },
   "scripts": {
-    "test": "jshint *.js && jasmine",
-    "build": "browserify browser.js -o static/bundle.js -t [ envify purge ]"
+    "build": "browserify browser.js -o static/bundle.js"
   },
   "repository": {
     "type": "git",
